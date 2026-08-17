@@ -1,0 +1,8 @@
+{
+  "name": "BDGMERCH - Bandung Merchandise & Custom Apparel Vendor",
+  "description": "B2B Custom Merchandise & Apparel Vendor platform in Bandung with live 3D wristband custom studio, dynamic catalog, dynamic announcement bar, Supabase integration, and WhatsApp quotes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #f8f8f8;
+    color: #000000;
+  }
+}
+
+/* Custom Neo-Brutalist & Bold Typography Theme */
+.btn-pill-yellow {
+  background-color: #facc15;
+  color: #000000;
+  font-weight: 900;
+  border: 2px solid #000000;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
+
+.btn-pill-yellow:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+  background-color: #fde047;
+}
+
+.btn-pill-yellow:active {
+  transform: translateY(2px);
+  box-shadow: 1px 1px 0px 0px rgba(0, 0, 0, 1);
+}
+
+.btn-pill-black {
+  background-color: #000000;
+  color: #ffffff;
+  font-weight: 900;
+  border: 2px solid #000000;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 4px 4px 0px 0px rgba(250, 204, 21, 0.7);
+}
+
+.btn-pill-black:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px 0px rgba(250, 204, 21, 1);
+  background-color: #111111;
+}
+
+.btn-pill-black:active {
+  transform: translateY(2px);
+  box-shadow: 1px 1px 0px 0px rgba(250, 204, 21, 0.5);
+}
+
+.polaroid-card {
+  background: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 1rem;
+  box-shadow: 4px 4px 0px 0px #000000;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.polaroid-card:hover {
+  transform: translateY(-6px) scale(1.02) !important;
+  box-shadow: 8px 8px 0px 0px #000000 !important;
+  z-index: 40 !important;
+}
+
+.dot-pattern {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Floating keyframe animations for natural life in hero elements */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(var(--rot, -3deg));
+  }
+  50% {
+    transform: translateY(-8px) rotate(var(--rot, -3deg));
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateY(0px) rotate(var(--rot, 3deg));
+  }
+  50% {
+    transform: translateY(8px) rotate(var(--rot, 3deg));
+  }
+}
+
+.animate-float-1 {
+  --rot: -4deg;
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  --rot: 4deg;
+  animation: floatReverse 7s ease-in-out infinite 0.5s;
+}
+
+.animate-float-3 {
+  --rot: -3deg;
+  animation: floatSlow 8s ease-in-out infinite 1.2s;
+}
+
+.animate-float-4 {
+  --rot: 5deg;
+  animation: floatReverse 6.5s ease-in-out infinite 1.8s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+
