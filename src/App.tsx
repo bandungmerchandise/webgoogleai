@@ -83,7 +83,7 @@ const DEFAULT_SITE_CONFIG: SiteConfig = {
   meta_keywords: 'Vendor Konveksi Bandung, Pabrik Merchandise Custom, Vendor Gelang Karet Bandung, Sablon Kaos Bandung, Konveksi Kaos Bandung, Wristband Karet Custom, Pouch & Totebag Promosi, Pin Enamel Bandung, Lanyard Custom Bandung, Cetak Merchandise B2B, Seminar Kit Bandung, Vendor Merchandise Event',
   announcement_enabled: true,
   announcement_badge: 'PROMO PRODUKSI BULAN INI',
-  announcement_text: 'Free Sampel Bahan & Mockup 3D untuk Order di atas 100 Pcs!',
+  announcement_text: 'taiiiiiiiiiiiiiiiiiiiiiiii',
   announcement_link_text: 'Klaim Promo',
   announcement_link_url: '',
   instagram_handle: '@bdgmerch.id',
