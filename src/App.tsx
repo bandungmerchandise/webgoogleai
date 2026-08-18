@@ -82,9 +82,9 @@ const DEFAULT_SITE_CONFIG: SiteConfig = {
   meta_keywords: 'vendor gelang karet bandung, sablon kaos bandung, wristband karet custom, konveksi kaos bandung, merchandise bandung, vendor custom merchandise, gantungan kunci karet, pin enamel bandung',
   announcement_enabled: true,
   announcement_badge: 'PROMO PRODUKSI BULAN INI',
-  announcement_text: 'Free Sampel Bahan & Mockup 3D untuk Order di atas 100 Pcs!',
+  announcement_text: 'Gratis Ongkir / Subsidi Ongkir ke Seluruh Indonesia',
   announcement_link_text: 'Klaim Promo',
-  announcement_link_url: '',
+  announcement_link_url: 'https://api.whatsapp.com/send/?phone=6281312211161&text=Halo+BDGMERCH%2C+saya+ingin+konsultasi+order+merchandise.&type=phone_number&app_absent=0',
   instagram_handle: '@bdgmerch.id',
   instagram_url: 'https://www.instagram.com/bdgmerch.id'
 };
