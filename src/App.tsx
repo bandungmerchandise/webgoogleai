@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { supabase } from './lib/supabase';
-import PromoBar from './components/PromoBar';
 import {
   ArrowUpRight,
   Check,
@@ -2133,7 +2132,7 @@ export default function App() {
       />
 
       {/* SELIPKAN PROMOBAR TEPAT DI SINI */}
-    <PromoBar />
+      <PromoBar />
       
       {/* BACKGROUND NEO-BRUTALIST DOT GRID */}
       <div className="fixed inset-0 pointer-events-none dot-pattern opacity-60 z-0" />
