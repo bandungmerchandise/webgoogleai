@@ -55,12 +55,15 @@ import {
   Settings,
   Instagram,
   Camera,
-  Heart
+  Heart,
+  Share2
 } from 'lucide-react';
 import { SEO } from './components/SEO';
 import { WristbandCanvas } from './components/WristbandCanvas';
 import { CategoryCardSlider } from './components/CategoryCardSlider';
 import { InstagramPortfolio } from './components/InstagramPortfolio';
+import { PromoBar } from './components/PromoBar';
+import { useWhatsApp, cleanWhatsAppNumber, formatDisplayWhatsApp } from './context/WhatsAppContext';
 import {
   PageId,
   SiteConfig,
@@ -71,510 +74,43 @@ import {
   PortfolioItem
 } from './types';
 
-const WA_PHONE_NUMBER = "6281312211161"; // 081312211161 in international format
-
 const DEFAULT_SITE_CONFIG: SiteConfig = {
   brand_name: 'BDGMERCH',
   tagline: 'BANDUNG MERCHANDISE VENDOR',
   logo_url: '',
-  meta_title: 'BDGMERCH - Vendor Gelang Karet & Custom Sablon Kaos Bandung',
-  meta_description: 'Vendor pembuatan gelang karet silikon custom, sablon kaos, hoodie, dan enamel pin terpercaya di Bandung. Berpengalaman dengan 40+ ulasan positif.',
-  meta_keywords: 'vendor gelang karet bandung, sablon kaos bandung, wristband karet custom, konveksi kaos bandung, merchandise bandung, vendor custom merchandise, gantungan kunci karet, pin enamel bandung',
+  meta_title: 'BDGMERCH - Vendor Konveksi & Pabrik Custom Merchandise Bandung',
+  meta_description: 'Pabrik & vendor merchandise B2B terpercaya di Bandung. Spesialis gelang karet (wristband), konveksi sablon kaos, hoodie, pouch totebag, pin enamel, lanyard & souvenir kit. Pengerjaan cepat & garansi ganti baru.',
+  meta_keywords: 'Vendor Konveksi Bandung, Pabrik Merchandise Custom, Vendor Gelang Karet Bandung, Sablon Kaos Bandung, Konveksi Kaos Bandung, Wristband Karet Custom, Pouch & Totebag Promosi, Pin Enamel Bandung, Lanyard Custom Bandung, Cetak Merchandise B2B, Seminar Kit Bandung, Vendor Merchandise Event',
   announcement_enabled: true,
   announcement_badge: 'PROMO PRODUKSI BULAN INI',
-  announcement_text: 'Gratis Ongkir / Subsidi Ongkir ke Seluruh Indonesia',
+  announcement_text: 'Free Sampel Bahan & Mockup 3D untuk Order di atas 100 Pcs!',
   announcement_link_text: 'Klaim Promo',
-  announcement_link_url: 'https://api.whatsapp.com/send/?phone=6281312211161&text=Halo+BDGMERCH%2C+saya+ingin+konsultasi+order+merchandise.&type=phone_number&app_absent=0',
+  announcement_link_url: '',
   instagram_handle: '@bdgmerch.id',
-  instagram_url: 'https://www.instagram.com/bdgmerch.id'
+  instagram_url: 'https://www.instagram.com/bdgmerch.id',
+  whatsapp_number: '6281312211161'
 };
 
-export const BDGMERCH_CATEGORIES: CategoryConfig[] = [
-  {
-    id: 'apparel',
-    name: 'Apparel & Seragam',
-    shortTitle: 'Kaos, Hoodie & Polo',
-    tag: 'KONVEKSI BANDUNG',
-    description: 'Bahan Cotton Combed 24s/30s asli distro, Fleece tebal 330 gsm, & Lacoste CVC dengan sablon Plastisol tahan cuci 100x.',
-    specs: [
-      'Pola Reguler, Oversize & Boxy Cut Distro',
-      'Sablon DTF HD / Plastisol Karet / Bordir Komputer',
-      'Free Custom Hangtag, Label Leher & Plastik Klip'
-    ],
-    iconName: 'Shirt',
-    sampleMoq: 'Min. 24 Pcs',
-    popularItems: 'Kaos Combed • Hoodie Fleece • Polo Lacoste',
-    images: [
-      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 'rubber',
-    name: 'Rubber Merchandise',
-    shortTitle: 'Gelang Karet & Keychain 3D',
-    tag: 'SPESIALIS BANDUNG',
-    description: 'Pabrikasi langsung moulding karet PVC sintetis berteknologi tinggi. Lentur, presisi tinggi, tahan air, dan awet bertahun-tahun.',
-    specs: [
-      'Gelang Karet Deboss Isi Warna / Emboss Timbul / Glow',
-      'Gantungan Kunci Karet Die-cut 3D Relief Bergradasi',
-      'Patch Karet Velcro untuk Rompi Touring, Tas & Jaket'
-    ],
-    iconName: 'Layers',
-    sampleMoq: 'Min. 100 Pcs',
-    popularItems: 'Wristband • Keychain 3D • Patch Karet',
-    images: [
-      'https://images.unsplash.com/photo-1611591475152-473559db2d4f?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 'accessories',
-    name: 'Aksesoris & Badge',
-    shortTitle: 'Pin Enamel Logam & Lanyard',
-    tag: 'EVENT & VIP BADGE',
-    description: 'Pin logam cor kuningan/zinc alloy mewah dengan hard/soft enamel, serta lanyard printing full colour anti luntur.',
-    specs: [
-      'Hard / Soft Enamel Pin Logam Cor Kuningan Presisi',
-      'Tali Lanyard Tisu 2 Sisi + Stopper Klip & Kait Oval',
-      'Medali Cor Logam Kejuaraan & Badge Eksklusif'
-    ],
-    iconName: 'Award',
-    sampleMoq: 'Min. 50 Pcs',
-    popularItems: 'Pin Enamel • Lanyard Tisu • Medali Cor',
-    images: [
-      'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1598532163257-ae3c6b2524b6?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 'bags',
-    name: 'Tas & Pouch',
-    shortTitle: 'Tactical Backpack, Tote & Pouch',
-    tag: 'CUSTOM B2B MERCH',
-    description: 'Produksi ransel taktis cordura, tote bag canvas tebal, cosmetic pouch, dan pouch kulit sintetis berstandar ekspor.',
-    specs: [
-      'Material Canvas Tebal, Cordura 1000D & Leatherette',
-      'Sablon DTF Full Colour, Bordir Komputer, atau Deboss Logo',
-      'Resleting YKK Original & Jahitan Bartack Ekstra Kuat'
-    ],
-    iconName: 'ShoppingBag',
-    sampleMoq: 'Min. 50 Pcs',
-    popularItems: 'Tactical Backpack • Canvas Tote • Leather Pouch',
-    images: [
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 'headwear',
-    name: 'Topi & Headwear',
-    shortTitle: 'Snapback, Trucker & Bucket Hat',
-    tag: 'PABRIKASI TOPI',
-    description: 'Topi custom berbagai model dengan bahan Rafel denim, Drill grade A, dan jaring premium berstandar distro Bandung.',
-    specs: [
-      'Pilihan Model Snapback, Trucker Hat, & Bucket Hat Reversible',
-      'Bordir Timbul 3D Komputer Tajam & Patch Woven',
-      'Pengait Gesper Besi Cakop Anti Karat / Snap Plastik Kuat'
-    ],
-    iconName: 'CircleDot',
-    sampleMoq: 'Min. 36 Pcs',
-    popularItems: 'Snapback Bordir • Trucker Jaring • Bucket Hat',
-    images: [
-      'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1575428652377-a2d80e2277fc?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=800&auto=format&fit=crop&q=80'
-    ]
-  },
-  {
-    id: 'packaging',
-    name: 'Packaging & Souvenir Set',
-    shortTitle: 'Custom Box, Seminar Kit & Goodie Bag',
-    tag: 'CORPORATE GIFT',
-    description: 'Paket merchandise lengkap & kemasan eksklusif hardbox custom finishing foil emas/silver untuk seminar & onboarding kit kantor.',
-    specs: [
-      'Hardbox Magnet / Corrugated Box Printing Full Colour',
-      'Paket Seminar Kit & Onboarding Gift Set Lengkap',
-      'Non-Woven & Spunbond Custom Goodie Bag Sablon HD'
-    ],
-    iconName: 'Package',
-    sampleMoq: 'Min. 50 Pcs',
-    popularItems: 'Custom Hardbox • Seminar Kit • Goodie Bag',
-    images: [
-      'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80'
-    ]
-  }
-];
+import {
+  BDGMERCH_CATEGORIES,
+  DEFAULT_PORTFOLIO,
+  DEFAULT_FAQS,
+  DEFAULT_CLIENT_LOGOS,
+  DEFAULT_PRODUCTS
+} from "./data/initialData";
 
-// DEFAULT PORTFOLIO ITEMS (PREPARATION FOR N8N & SUPABASE DYNAMIC SYNC)
-export const DEFAULT_PORTFOLIO: PortfolioItem[] = [
-  {
-    id: 'port-1',
-    title: 'Gelang Karet Custom Glow in the Dark',
-    category: 'Rubber Wristband',
-    client_name: 'Komunitas Otomotif Bandung',
-    caption: 'Gelang karet PVC deboss timbul warna fosfor glow in the dark untuk event touring malam.',
-    image_url: 'https://images.unsplash.com/photo-1611591475152-473559db2d4f?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 1
-  },
-  {
-    id: 'port-2',
-    title: 'Kaos Cotton Combed 24s DTF HD',
-    category: 'Apparel & Seragam',
-    client_name: 'Festival Musik 2026',
-    caption: 'Kaos merchandise official festival musik bahan 100% cotton combed asli distro Bandung.',
-    image_url: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 2
-  },
-  {
-    id: 'port-3',
-    title: 'Enamel Pin Logam Cor Kuningan Emas',
-    category: 'Pin & Aksesoris',
-    client_name: 'BUMN Corporate VIP Badge',
-    caption: 'Pin kuningan lapis emas finishing hard enamel presisi tinggi dengan kancing kupu-kupu kuat.',
-    image_url: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 3
-  },
-  {
-    id: 'port-4',
-    title: 'Tactical Backpack Cordura 1000D',
-    category: 'Tas & Pouch',
-    client_name: 'Mining & Outdoor Event',
-    caption: 'Tas ransel lapangan water resistant dengan sistem webbing MOLLE dan panel custom rubber patch.',
-    image_url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 4
-  },
-  {
-    id: 'port-5',
-    title: 'Gantungan Kunci Karet 3D Die-Cut Relief',
-    category: 'Rubber Keychain',
-    client_name: 'Official Merchandise Brand',
-    caption: 'Keychain karet 3 dimensi bertingkat dengan moulding CNC presisi tinggi dan ring gantungan putar anti karat.',
-    image_url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 5
-  },
-  {
-    id: 'port-6',
-    title: 'Tali Lanyard Printing Tisu Full HD + ID Case',
-    category: 'Event Lanyard',
-    client_name: 'National Tech Summit 2026',
-    caption: 'Tali lanyard bahan tisu super lembut sablon sublimasi 2 sisi tidak luntur + stopper klip safety.',
-    image_url: 'https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 6
-  },
-  {
-    id: 'port-7',
-    title: 'Snapback Bordir 3D Timbul Komputer',
-    category: 'Topi & Headwear',
-    client_name: 'Extreme Sports Community',
-    caption: 'Topi rafel denim tebal dengan bordir 3D timbul padat serta jahitan dalam berlisensi rapi.',
-    image_url: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 7
-  },
-  {
-    id: 'port-8',
-    title: 'Luxury Hardbox Magnet & Seminar Gift Set',
-    category: 'Packaging & Souvenir',
-    client_name: 'Corporate Onboarding Kit',
-    caption: 'Hardbox kado custom finishing gold foil emboss dengan busa eva presisi untuk welcoming merchandise.',
-    image_url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=800&auto=format&fit=crop&q=80',
-    post_url: 'https://www.instagram.com/bdgmerch.id',
-    display_order: 8
-  }
-];
-
-// DEFAULT FAQS
-const DEFAULT_FAQS: FaqItem[] = [
-  {
-    id: 'faq-1',
-    question: "Berapa Minimum Order Quantity (MOQ) di BDGMERCH?",
-    answer: "Untuk produk Kaos/Apparel (T-Shirt, Polo, Hoodie), MOQ kami adalah 24 pcs per desain. Untuk produk Rubber/Karet (Gelang Karet, Keychain, Label Karet), MOQ adalah 100 pcs. Untuk Pin Enamel Cor Logam, MOQ mulai dari 50 pcs.",
-    display_order: 1
-  },
-  {
-    id: 'faq-2',
-    question: "Berapa lama proses pengerjaan produksi?",
-    answer: "Rata-rata waktu pengerjaan Kaos & Apparel berkisar antara 5-7 hari kerja. Produk Rubber Karet membutuhkan waktu 5-7 hari kerja. Pin Enamel Cor membutuhkan waktu 8-12 hari kerja. Kami juga menyediakan layanan Express (3-4 hari) untuk kebutuhan mendesak / deadline event.",
-    display_order: 2
-  },
-  {
-    id: 'faq-3',
-    question: "Apakah bisa membuat sampel (proofing) terlebih dahulu?",
-    answer: "Tentu! Untuk pesanan di atas 100 pcs, kami dapat membuatkan sample fisik (approval sample) terlebih dahulu sebelum melanjutkan produksi massal agar Anda yakin 100% dengan warna, kain, dan detail cetak.",
-    display_order: 3
-  },
-  {
-    id: 'faq-4',
-    question: "Format file desain apa yang harus saya siapkan?",
-    answer: "Format terbaik adalah file vector seperti Adobe Illustrator (.AI), CorelDraw (.CDR), PDF Vector, atau Photoshop (.PSD) dengan resolusi minimal 300 DPI. Jika Anda hanya memiliki sketsa kasar atau file JPG/PNG, tim desainer kami siap membantu merapikannya tanpa biaya tambahan!",
-    display_order: 4
-  },
-  {
-    id: 'faq-5',
-    question: "Bagaimana dengan jaminan garansi jika ada barang yang cacat?",
-    answer: "BDGMERCH memberikan Garansi Ganti Baru 100% atau perbaikan gratis jika terdapat cacat produksi akibat kesalahan jahit, sablon luntur, atau salah warna dari kesepakatan PO awal.",
-    display_order: 5
-  },
-  {
-    id: 'faq-6',
-    question: "Apakah BDGMERCH bisa menerbitkan Faktur Pajak untuk pengadaan kantor/B2B?",
-    answer: "Ya, kami berbadan hukum resmi (PT) dan dapat menerbitkan Surat Penawaran Resmi, Invoice, Kwitansi, serta Faktur Pajak PPN sesuai kebutuhan administrasi procurement perusahaan atau instansi Anda.",
-    display_order: 6
-  }
-];
-
-// DEFAULT CLIENT / PARTNER LOGOS
-const DEFAULT_CLIENT_LOGOS: ClientLogoItem[] = [
-  {
-    id: 'client-1',
-    client_name: 'Bank BJB',
-    logo_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Bank_BJB_logo.svg/320px-Bank_BJB_logo.svg.png',
-    display_order: 1,
-    size_scale: 'medium'
-  },
-  {
-    id: 'client-2',
-    client_name: 'Telkomsel',
-    logo_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/320px-Telkomsel_2021_icon.svg.png',
-    display_order: 2,
-    size_scale: 'medium'
-  },
-  {
-    id: 'client-3',
-    client_name: 'Eiger Adventure',
-    logo_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Eiger_logo.svg/320px-Eiger_logo.svg.png',
-    display_order: 3,
-    size_scale: 'medium'
-  },
-  {
-    id: 'client-4',
-    client_name: 'Pertamina',
-    logo_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Pertamina_Logo.svg/320px-Pertamina_Logo.svg.png',
-    display_order: 4,
-    size_scale: 'medium'
-  },
-  {
-    id: 'client-5',
-    client_name: 'ITB Bandung',
-    logo_url: 'https://upload.wikimedia.org/wikipedia/id/thumb/9/95/Logo_Institut_Teknologi_Bandung.png/320px-Logo_Institut_Teknologi_Bandung.png',
-    display_order: 5,
-    size_scale: 'medium'
-  },
-  {
-    id: 'client-6',
-    client_name: 'BCA',
-    logo_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Bank_Central_Asia.svg/320px-Bank_Central_Asia.svg.png',
-    display_order: 6,
-    size_scale: 'medium'
-  },
-  {
-    id: 'client-7',
-    client_name: 'Grab Indonesia',
-    logo_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Grab_Logo.svg/320px-Grab_Logo.svg.png',
-    display_order: 7,
-    size_scale: 'medium'
-  }
-];
-
-// DEFAULT CATALOG ITEMS (B2B Bandung Merchandise)
-const DEFAULT_PRODUCTS: ProductItem[] = [
-  {
-    id: 'kaos-cotton-combed',
-    category: 'apparel',
-    categoryLabel: 'Apparel & Seragam',
-    name: 'Kaos Custom Cotton Combed 24s/30s',
-    moq: '24 Pcs',
-    leadTime: '5-7 Hari Kerja',
-    priceRange: 'Rp 45.000 - Rp 75.000',
-    description: 'Bahan 100% Cotton Combed asli distro Bandung. Sangat adem, menyerap keringat maksimal dengan sablon Plastisol / DTF High Definition anti retak.',
-    features: ['Bahan Combed 24s/30s Original', 'Sablon Plastisol / DTF / Discharge', 'Jahitan Rantai Standar Ekspor', 'Free Custom Label Leher & Plastik Klip'],
-    badge: 'BEST SELLER',
-    tagline: 'Favorit Komunitas & Event Kantor'
-  },
-  {
-    id: 'gelang-karet-wristband',
-    category: 'rubber',
-    categoryLabel: 'Rubber Merchandise',
-    name: 'Gelang Karet Custom (Rubber Wristband)',
-    moq: '100 Pcs',
-    leadTime: '5-7 Hari Kerja',
-    priceRange: 'Rp 3.500 - Rp 8.000',
-    description: 'Gelang karet PVC 100% sintetis elastis dan tahan air. Pilihan model huruf timbul (emboss), huruf cekung (deboss) isi warna, atau glow in the dark.',
-    features: ['Material Rubber 100% Anti Alergi', 'Model Deboss Isi Warna / Emboss Timbul', 'Tersedia Ukuran Dewasa (202mm) & Anak (180mm)', 'Pilihan Efek Glow In The Dark'],
-    badge: 'SPESIALIS BANDUNG',
-    tagline: 'Aksesoris Tiket Event & Merchandise Komunitas'
-  },
-  {
-    id: 'gantungan-kunci-karet',
-    category: 'rubber',
-    categoryLabel: 'Rubber Merchandise',
-    name: 'Gantungan Kunci Karet Custom (Keychain 2D/3D)',
-    moq: '100 Pcs',
-    leadTime: '5-7 Hari Kerja',
-    priceRange: 'Rp 3.000 - Rp 9.500',
-    description: 'Keychain karet tebal 4-5mm dengan ring putar anti karat. Bentuk bebas die-cut mengikuti logo brand/event dengan warna presisi tinggi.',
-    features: ['Bentuk Bebas Die-Cut Sesuai Logo', 'Ring Putar Rantai Tebal Anti Karat', 'Pilihan Model 1 Sisi atau 2 Sisi Bolak-balik', 'Tekstur Karet Halus Tanpa Cacat Moulding'],
-    badge: 'POPULAR SOUVENIR',
-    tagline: 'Souvenir Konser, Otomotif & Brand'
-  },
-  {
-    id: 'hoodie-crewneck',
-    category: 'apparel',
-    categoryLabel: 'Apparel & Seragam',
-    name: 'Hoodie & Crewneck Fleece Cotton',
-    moq: '24 Pcs',
-    leadTime: '7-10 Hari Kerja',
-    priceRange: 'Rp 95.000 - Rp 145.000',
-    description: 'Cotton Fleece tebal gramasi 280-330 gsm dengan bordir komputer presisi atau sablon high-density.',
-    features: ['Heavyweight Cotton Fleece Lembut', 'Bordir Komputer Tajam Presisi', 'Tali Hood Tebal & Eyelet Logam', 'Rib Karet Elastis Tahan Melar'],
-    badge: 'PREMIUM QUALITY',
-    tagline: 'Merchandise Premium Perusahaan'
-  },
-  {
-    id: 'rubber-patch-3d',
-    category: 'rubber',
-    categoryLabel: 'Rubber Merchandise',
-    name: 'Label Karet / Rubber Patch 3D Timbul',
-    moq: '100 Pcs',
-    leadTime: '5-7 Hari Kerja',
-    priceRange: 'Rp 2.500 - Rp 8.000',
-    description: 'Karet PVC sintetis murni kualitas ekspor untuk patch rompi, jaket taktis, topi, dan tas dengan opsi jahitan tepi atau velcro.',
-    features: ['Material Karet PVC Lembut & Tahan Cuci', 'Model 3D Relief Bergradasi Tajam', 'Tersedia Opsi Backing Velcro / Jahit', 'Gratis Master Moulding untuk Repeat Order'],
-    badge: 'PABRIKASI LANGSUNG',
-    tagline: 'Patch Rompi Touring & Tactical'
-  },
-  {
-    id: 'polo-shirt',
-    category: 'apparel',
-    categoryLabel: 'Apparel & Seragam',
-    name: 'Polo Shirt Lacoste Pique CVC',
-    moq: '24 Pcs',
-    leadTime: '6-8 Hari Kerja',
-    priceRange: 'Rp 65.000 - Rp 95.000',
-    description: 'Seragam polo semi-formal untuk gathering kantor, pameran, seragam SPG, dan merchandise premium.',
-    features: ['Lacoste CVC 24s Adem & Rapi', 'Kerah Rajut Tebal Tidak Mudah Keriting', 'Bordir Logo Dada & Lengan', 'Pilihan 30+ Warna Kain'],
-    tagline: 'Seragam Gathering & Corporate'
-  },
-  {
-    id: 'pin-enamel-logam',
-    category: 'accessories',
-    categoryLabel: 'Aksesoris & Badge',
-    name: 'Enamel Pin Logam Cor & Lapel Pin VIP',
-    moq: '50 Pcs',
-    leadTime: '8-12 Hari Kerja',
-    priceRange: 'Rp 12.000 - Rp 28.000',
-    description: 'Pin logam cor kuningan/zinc alloy dengan pilihan hard enamel, soft enamel, lapis emas/perak, dan pengait magnet/kupu-kupu.',
-    features: ['Material Logam Kuningan / Zinc Alloy', 'Finishing Gold, Silver, Black Nickel', 'Pengait Butterfly Clutch / Magnet Kuat', 'Packaging Plastik Satuan Premium'],
-    badge: 'EXCLUSIVE',
-    tagline: 'Collectible & VIP Badge'
-  },
-  {
-    id: 'lanyard-id-card',
-    category: 'accessories',
-    categoryLabel: 'Aksesoris & Badge',
-    name: 'Tali Lanyard Printing HD & Holder ID Card',
-    moq: '50 Pcs',
-    leadTime: '3-5 Hari Kerja',
-    priceRange: 'Rp 6.000 - Rp 15.000',
-    description: 'Lanyard tisu printing sublimasi full colour 2 sisi dengan stopper klip & kait putar oval kokoh.',
-    features: ['Bahan Tisu Halus Lembut di Leher', 'Printing Sublimasi HD Anti Luntur', 'Stopper Buka-Tutup & Kait Oval Tebal', 'Bisa Tambah Holder Kulit / Mika'],
-    badge: 'EXPRESS SERVICE',
-    tagline: 'Perlengkapan Event & ID Kantor'
-  },
-  {
-    id: 'tactical-backpack-cordura',
-    category: 'bags',
-    categoryLabel: 'Tas & Pouch',
-    name: 'Tactical Backpack & Waistbag Cordura 1000D',
-    moq: '50 Pcs',
-    leadTime: '10-14 Hari Kerja',
-    priceRange: 'Rp 85.000 - Rp 185.000',
-    description: 'Tas ransel militer & waistbag tahan air dengan material Cordura 1000D tebal, sistem MOLLE webbing, resleting YKK, dan slot velcro custom patch.',
-    features: ['Bahan Cordura 1000D Waterproof', 'Resleting YKK & Buckle Acetal Kuat', 'Slot Khusus Laptop & Busa Punggung Tebal', 'Panel Velcro untuk Custom Rubber Patch'],
-    badge: 'HEAVY DUTY',
-    tagline: 'Tas Lapangan, Event Outdoor & Merchandise Kantor'
-  },
-  {
-    id: 'tote-bag-canvas-pouch',
-    category: 'bags',
-    categoryLabel: 'Tas & Pouch',
-    name: 'Tote Bag Canvas Premium & Cosmetic Pouch',
-    moq: '50 Pcs',
-    leadTime: '5-7 Hari Kerja',
-    priceRange: 'Rp 18.000 - Rp 45.000',
-    description: 'Tote bag canvas twill tebal, canvas marsoto atau blacu grade A dengan sablon DTF/Plastisol tajam serta pouch kosmetik / dompet kulit sintetis.',
-    features: ['Bahan Canvas Marsoto / Twill Tebal', 'Sablon DTF High Definition / Bordir', 'Pilihan Resleting / Magnet / Kancing Klip', 'Tersedia Model Pouch Kulit Sintetis'],
-    badge: 'ECO FRIENDLY',
-    tagline: 'Souvenir Seminar, Pameran & Retail Brand'
-  },
-  {
-    id: 'topi-trucker-snapback',
-    category: 'headwear',
-    categoryLabel: 'Topi & Headwear',
-    name: 'Topi Custom Snapback, Trucker & Baseball',
-    moq: '36 Pcs',
-    leadTime: '7-10 Hari Kerja',
-    priceRange: 'Rp 25.000 - Rp 45.000',
-    description: 'Topi bahan Rafel Denim, Drill grade A, atau jaring trucker dengan bordir 3D timbul komputer atau patch woven presisi tinggi.',
-    features: ['Bahan Rafel Denim / Drill Grade A', 'Bordir Timbul 3D Komputer Tajam', 'Pengait Belakang Cakop Besi / Snap Plastik', 'Pola Topi Pas, Kokoh & Nyaman Dipakai'],
-    badge: 'DISTRO STANDAR',
-    tagline: 'Apparel Komunitas, Otomotif & Brand'
-  },
-  {
-    id: 'bucket-hat-bordir',
-    category: 'headwear',
-    categoryLabel: 'Topi & Headwear',
-    name: 'Bucket Hat Reversible & Tactical Hat Bordir',
-    moq: '36 Pcs',
-    leadTime: '7-10 Hari Kerja',
-    priceRange: 'Rp 28.000 - Rp 50.000',
-    description: 'Bucket hat 2 sisi (bolak-balik dua warna) dengan bahan canvas/drill tebal dan bordir logo presisi di kedua sisi.',
-    features: ['Bisa Model 2 Sisi Bolak-balik (Reversible)', 'Bahan Drill / Canvas / Ripstop Kuat', 'Bordir Logo Rapi Depan & Samping', 'Tersedia Opsi Tali Leher Stopper'],
-    tagline: 'Merchandise Festival Musik & Komunitas'
-  },
-  {
-    id: 'custom-hardbox-packaging',
-    category: 'packaging',
-    categoryLabel: 'Packaging & Souvenir Set',
-    name: 'Custom Hardbox Magnet & Packaging Eksklusif',
-    moq: '50 Pcs',
-    leadTime: '8-12 Hari Kerja',
-    priceRange: 'Rp 35.000 - Rp 95.000',
-    description: 'Kotak kado rigid hardbox tebal dengan penutup magnet, finishing poly foil emas/silver, spot UV, dan busa eva moulding presisi di dalam.',
-    features: ['Board Tebal 30A/40A Dilapis Fancy Paper', 'Finishing Foil Emas/Silver / Emboss / Spot UV', 'Kancing Magnet Kuat & Presisi', 'Custom Busa Eva / Satin Foam di Dalam'],
-    badge: 'LUXURY GIFT',
-    tagline: 'Kemasan VIP, Onboarding Kit & Plakat'
-  },
-  {
-    id: 'seminar-kit-goodie-bag',
-    category: 'packaging',
-    categoryLabel: 'Packaging & Souvenir Set',
-    name: 'Paket Seminar Kit & Custom Goodie Bag Set',
-    moq: '50 Pcs',
-    leadTime: '5-7 Hari Kerja',
-    priceRange: 'Rp 25.000 - Rp 75.000',
-    description: 'Paket bundling seminar & gathering lengkap: Tas goodie bag / spunbond, buku agenda notes, tumbler, pulpen custom, dan lanyard id card.',
-    features: ['Paket Lengkap Siap Pakai untuk Event', 'Goodie Bag Spunbond / Blacu Sablon 2 Sisi', 'Bundling Buku Agenda, Pulpen & Tumbler', 'Bisa Custom Isi Sesuai Budget Perusahaan'],
-    badge: 'ALL-IN-ONE',
-    tagline: 'Solusi Praktis Seminar, Workshop & RUPS'
-  }
-];
+export { BDGMERCH_CATEGORIES };
 
 export default function App() {
+  // Global WhatsApp Context State
+  const {
+    whatsappNumber,
+    displayWhatsAppNumber,
+    rawWhatsAppNumber,
+    getWhatsAppUrl: getContextWhatsAppUrl,
+    updateWhatsAppNumber
+  } = useWhatsApp();
+
   // Navigation State
   const [currentPage, setCurrentPage] = useState<PageId>(() => {
     if (typeof window !== 'undefined') {
@@ -582,6 +118,8 @@ export default function App() {
       const validPages: PageId[] = ['home', 'katalog', 'custom-studio', 'kenapa-bdgmerch', 'faq'];
       if (validPages.includes(hash)) return hash;
     }
+    return 'home';
+  });
 
   // Modal & Mobile Menu State
   const [isPenawaranOpen, setIsPenawaranOpen] = useState(false);
@@ -994,7 +532,19 @@ export default function App() {
         .limit(1)
         .maybeSingle();
       
+      let promoText = '';
+      let promoBadge = '';
+      let promoLinkText = '';
+      let promoLinkUrl = '';
+      let promoEnabled: boolean | undefined = undefined;
+
       if (!error && data) {
+        promoText = data.announcement_text || data.promo_text || '';
+        promoBadge = data.announcement_badge || data.promo_badge || '';
+        promoLinkText = data.announcement_link_text || data.promo_link_text || '';
+        promoLinkUrl = data.announcement_link_url || '';
+        promoEnabled = data.announcement_enabled;
+
         const mapped: SiteConfig = {
           brand_name: data.brand_name || data.brandName || DEFAULT_SITE_CONFIG.brand_name,
           tagline: data.tagline || DEFAULT_SITE_CONFIG.tagline,
@@ -1002,18 +552,49 @@ export default function App() {
           meta_title: data.meta_title || DEFAULT_SITE_CONFIG.meta_title,
           meta_description: data.meta_description || DEFAULT_SITE_CONFIG.meta_description,
           meta_keywords: data.meta_keywords || DEFAULT_SITE_CONFIG.meta_keywords,
-          announcement_enabled: data.announcement_enabled !== undefined ? data.announcement_enabled : DEFAULT_SITE_CONFIG.announcement_enabled,
-          announcement_badge: data.announcement_badge || DEFAULT_SITE_CONFIG.announcement_badge,
-          announcement_text: data.announcement_text || DEFAULT_SITE_CONFIG.announcement_text,
-          announcement_link_text: data.announcement_link_text || DEFAULT_SITE_CONFIG.announcement_link_text,
-          announcement_link_url: data.announcement_link_url || DEFAULT_SITE_CONFIG.announcement_link_url,
+          announcement_enabled: promoEnabled !== undefined ? promoEnabled : DEFAULT_SITE_CONFIG.announcement_enabled,
+          announcement_badge: promoBadge || DEFAULT_SITE_CONFIG.announcement_badge,
+          announcement_text: promoText || DEFAULT_SITE_CONFIG.announcement_text,
+          announcement_link_text: promoLinkText || DEFAULT_SITE_CONFIG.announcement_link_text,
+          announcement_link_url: promoLinkUrl || DEFAULT_SITE_CONFIG.announcement_link_url,
           instagram_handle: data.instagram_handle || data.instagramHandle || DEFAULT_SITE_CONFIG.instagram_handle,
           instagram_url: data.instagram_url || data.instagramUrl || DEFAULT_SITE_CONFIG.instagram_url,
+          whatsapp_number: data.whatsapp_number || data.whatsappNumber || data.wa_number || data.phone || DEFAULT_SITE_CONFIG.whatsapp_number,
         };
         setSiteConfig(mapped);
         setConfigForm(mapped);
         if (typeof window !== 'undefined') {
           localStorage.setItem('bdgmerch_site_config_v1', JSON.stringify(mapped));
+        }
+      }
+
+      // Check fallback 'settings' table if announcement_text or promo_text was not present
+      if (!promoText) {
+        const { data: settingsRows } = await supabase
+          .from('settings')
+          .select('*')
+          .in('key', ['promo_text', 'announcement_text', 'promo_badge', 'announcement_badge']);
+
+        if (settingsRows && settingsRows.length > 0) {
+          let updated = false;
+          const configCopy = { ...siteConfig };
+          settingsRows.forEach((row: any) => {
+            if ((row.key === 'promo_text' || row.key === 'announcement_text') && row.value) {
+              configCopy.announcement_text = row.value;
+              updated = true;
+            }
+            if ((row.key === 'promo_badge' || row.key === 'announcement_badge') && row.value) {
+              configCopy.announcement_badge = row.value;
+              updated = true;
+            }
+          });
+          if (updated) {
+            setSiteConfig(configCopy);
+            setConfigForm(configCopy);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('bdgmerch_site_config_v1', JSON.stringify(configCopy));
+            }
+          }
         }
       }
     } catch (err: any) {
@@ -1789,6 +1370,7 @@ export default function App() {
         announcement_link_url: configForm.announcement_link_url?.trim() || '',
         instagram_handle: configForm.instagram_handle?.trim() || '@bdgmerch.id',
         instagram_url: configForm.instagram_url?.trim() || 'https://www.instagram.com/bdgmerch.id',
+        whatsapp_number: configForm.whatsapp_number?.trim() || rawWhatsAppNumber || '6281312211161',
       };
 
       // Optimistic State Update
@@ -1797,9 +1379,14 @@ export default function App() {
         localStorage.setItem('bdgmerch_site_config_v1', JSON.stringify(payload));
       }
 
-      setAdminStatusMessage({ type: 'success', text: 'Pengaturan Brand, Media Sosial, & Header berhasil disimpan!' });
+      // Sync with WhatsApp Context & Supabase
+      if (payload.whatsapp_number) {
+        await updateWhatsAppNumber(payload.whatsapp_number);
+      }
 
-      // Sync with Supabase
+      setAdminStatusMessage({ type: 'success', text: 'Pengaturan Brand, Kontak WhatsApp, Media Sosial, & Header berhasil disimpan!' });
+
+      // Sync with Supabase (both site_settings and settings tables for maximum reliability)
       await supabase.from('site_settings').upsert([
         {
           id: 1,
@@ -1812,12 +1399,23 @@ export default function App() {
           announcement_enabled: payload.announcement_enabled,
           announcement_badge: payload.announcement_badge,
           announcement_text: payload.announcement_text,
+          promo_text: payload.announcement_text,
           announcement_link_text: payload.announcement_link_text,
           announcement_link_url: payload.announcement_link_url,
           instagram_handle: payload.instagram_handle,
           instagram_url: payload.instagram_url,
+          whatsapp_number: payload.whatsapp_number,
           updated_at: new Date().toISOString()
         }
+      ]);
+
+      // Also upsert key-value pairs into settings table as fail-safe
+      await supabase.from('settings').upsert([
+        { key: 'promo_text', value: payload.announcement_text, updated_at: new Date().toISOString() },
+        { key: 'announcement_text', value: payload.announcement_text, updated_at: new Date().toISOString() },
+        { key: 'promo_badge', value: payload.announcement_badge, updated_at: new Date().toISOString() },
+        { key: 'announcement_badge', value: payload.announcement_badge, updated_at: new Date().toISOString() },
+        { key: 'announcement_enabled', value: String(payload.announcement_enabled), updated_at: new Date().toISOString() }
       ]);
     } catch (err: any) {
       console.warn('Save site_settings note:', err);
@@ -1914,10 +1512,8 @@ export default function App() {
 - Qty: ${qty} Pcs
 - Catatan: ${catatan}`;
 
-
-    
-    // Target link to 081312211161 (international: 6281312211161)
-    const waUrl = `https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
+    // Target dynamic WhatsApp link
+    const waUrl = getContextWhatsAppUrl(message);
 
     // Confetti effect
     confetti({
@@ -2106,8 +1702,7 @@ export default function App() {
 
   // Direct WA URL for quick links
   const getDirectWhatsAppUrl = (customText?: string) => {
-    const text = customText || `Halo BDGMERCH, saya ingin konsultasi produksi merchandise custom.`;
-    return `https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(text)}`;
+    return getContextWhatsAppUrl(customText);
   };
 
   // Filtered catalog
@@ -2129,10 +1724,13 @@ export default function App() {
         description={siteConfig.meta_description}
         keywords={siteConfig.meta_keywords}
         brandName={siteConfig.brand_name}
+        logoUrl={siteConfig.logo_url}
+        telephone={`+${whatsappNumber}`}
+        products={products}
+        faqs={faqs}
+        currentRoute={currentPage}
+        canonicalUrl="https://bdgmerch.com"
       />
-
-      {/* SELIPKAN PROMOBAR TEPAT DI SINI */}
-      <PromoBar />
       
       {/* BACKGROUND NEO-BRUTALIST DOT GRID */}
       <div className="fixed inset-0 pointer-events-none dot-pattern opacity-60 z-0" />
@@ -2140,31 +1738,10 @@ export default function App() {
       <div className="fixed top-1/2 -left-40 w-96 h-96 bg-black/[0.03] rounded-full blur-3xl pointer-events-none" />
 
       {/* TOP ANNOUNCEMENT BANNER */}
-      {siteConfig.announcement_enabled !== false && (
-        <div className="relative z-30 bg-black text-white text-xs md:text-sm font-black py-2.5 px-4 text-center flex flex-wrap items-center justify-center gap-2 border-b-2 border-black">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-[#facc15] text-black font-black text-[10px] uppercase tracking-wider">
-            {siteConfig.announcement_badge || 'PROMO PRODUKSI BULAN INI'}
-          </span>
-          <span>{siteConfig.announcement_text || 'Free Sampel Bahan & Mockup 3D untuk Order di atas 100 Pcs!'}</span>
-          {siteConfig.announcement_link_url && siteConfig.announcement_link_url.startsWith('http') ? (
-            <a 
-              href={siteConfig.announcement_link_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-[#facc15] transition-colors ml-1 font-black inline-flex items-center gap-0.5 cursor-pointer"
-            >
-              {siteConfig.announcement_link_text || 'Klaim Promo'} <ArrowUpRight className="w-3.5 h-3.5 stroke-[3]" />
-            </a>
-          ) : (
-            <button 
-              onClick={() => openPenawaranModal(`Klaim Promo: ${siteConfig.announcement_text || 'Free Sampel Bahan'}`, '100')}
-              className="underline hover:text-[#facc15] transition-colors ml-1 font-black inline-flex items-center gap-0.5 cursor-pointer"
-            >
-              {siteConfig.announcement_link_text || 'Klaim Promo'} <ArrowUpRight className="w-3.5 h-3.5 stroke-[3]" />
-            </button>
-          )}
-        </div>
-      )}
+      <PromoBar 
+        siteConfig={siteConfig}
+        onClaimPromo={(pText) => openPenawaranModal(`Klaim Promo: ${pText || 'Free Sampel Bahan'}`, '100')}
+      />
 
       {/* NAVBAR */}
       <header className="sticky top-0 z-40 bg-[#f8f8f8]/95 backdrop-blur-md border-b-2 border-black transition-all">
@@ -2485,7 +2062,7 @@ export default function App() {
                   {/* CTA PRIMARY: KONSULTASI DESAIN (WA) & LIHAT KATALOG */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 z-30 w-full sm:w-auto mb-8">
                     
-                    {/* BUTTON 1: KONSULTASI DESAIN (WA to 081312211161) */}
+                    {/* BUTTON 1: KONSULTASI DESAIN (WA to 0813-1221-1161 / 6281312211161) */}
                     <a
                       href={getDirectWhatsAppUrl("Halo BDGMERCH, saya ingin konsultasi desain dan estimasi harga merchandise untuk keperluan kami.")}
                       target="_blank"
@@ -3166,12 +2743,12 @@ export default function App() {
                                        shirtColor === '#3f4f34' ? 'Hijau Army' :
                                        shirtColor === '#facc15' ? 'Yellow' : 'Misty Grey';
                       const msg = `Halo BDGMERCH, saya ingin minta penawaran untuk Custom Kaos:\n- Warna Kaos: ${colorName}\n- Posisi Sablon: ${shirtPreset === 'left-chest' ? 'Dada Kiri (Left Chest)' : shirtPreset === 'front-center' ? 'Depan Penuh (Front Center)' : 'Custom Position'}\n- Teks Custom: ${shirtCustomText || '-'}\n- Membawa Logo Sendiri: ${shirtUploadedLogo ? 'Ya' : 'Tidak'}\n- Estimasi Qty: 50 Pcs`;
-                      window.open(`https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+                      window.open(getContextWhatsAppUrl(msg), '_blank');
                     }}
                     className="w-full py-4 rounded-full bg-[#facc15] text-black font-black text-xs uppercase border-2 border-black shadow-[4px_4px_0px_#000] hover:translate-y-0.5 hover:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>MINTA PENAWARAN VIA WA (081312211161)</span>
+                    <span>MINTA PENAWARAN VIA WA ({displayWhatsAppNumber})</span>
                   </button>
 
                 </div>
@@ -3499,12 +3076,12 @@ export default function App() {
                     type="button"
                     onClick={() => {
                       const msg = `Halo BDGMERCH, saya ingin minta penawaran untuk Gelang Karet Custom:\n- Lebar Gelang: ${wristbandWidth} cm\n- Warna Dasar: ${wristbandColor}\n- Tulisan Karet: ${wristbandText}\n- Model Cetak: ${wristbandStyle === 'emboss' ? 'Emboss (Timbul)' : 'Deboss (Tenggelam)'}\n- Panjang Standar: 19 cm (Diameter 6 cm)\n- Estimasi Order: 100 Pcs`;
-                      window.open(`https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
+                      window.open(getContextWhatsAppUrl(msg), '_blank');
                     }}
                     className="w-full py-4 rounded-full bg-[#facc15] text-black font-black text-xs uppercase border-2 border-black shadow-[4px_4px_0px_#000] hover:translate-y-0.5 hover:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>MINTA PENAWARAN VIA WA (081312211161)</span>
+                    <span>MINTA PENAWARAN VIA WA ({displayWhatsAppNumber})</span>
                   </button>
 
                 </div>
@@ -4076,7 +3653,7 @@ export default function App() {
                 className="bg-[#facc15] text-black font-black px-8 py-3.5 rounded-full border-2 border-black shadow-[3px_3px_0px_#fff] hover:translate-y-0.5 transition-all text-xs uppercase inline-flex items-center gap-2"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>CHAT WHATSAPP KE 0813-1221-1161</span>
+                <span>CHAT WHATSAPP KE {displayWhatsAppNumber}</span>
               </a>
             </div>
 
@@ -4111,12 +3688,12 @@ export default function App() {
                 <p>
                   <span className="text-neutral-300 font-black">📱 WhatsApp:</span>{' '}
                   <a 
-                    href={`https://wa.me/${WA_PHONE_NUMBER}`} 
+                    href={`https://wa.me/${whatsappNumber}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-[#facc15] hover:underline font-black bg-[#facc15]/10 px-2 py-0.5 rounded border border-[#facc15]/30 inline-block"
                   >
-                    0813-1221-1161
+                    {displayWhatsAppNumber}
                   </a>
                 </p>
                 <p>
@@ -5341,6 +4918,31 @@ export default function App() {
                       </div>
                     </div>
 
+                    {/* SECTION D: KONTAK & NOMOR WHATSAPP RESMI */}
+                    <div className="p-4 bg-white rounded-2xl border-2 border-black space-y-3.5 shadow-[3px_3px_0px_#000]">
+                      <span className="text-xs font-black uppercase text-black flex items-center gap-1.5">
+                        <MessageSquare className="w-4 h-4 text-black" />
+                        <span>Kontak WhatsApp Resmi (Global Sync)</span>
+                      </span>
+
+                      {/* WhatsApp Phone Input */}
+                      <div>
+                        <label className="block text-[11px] font-black uppercase text-black mb-1">
+                          Nomor WhatsApp Admin / CS:
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Contoh: 081312211161 atau 6281312211161"
+                          value={configForm.whatsapp_number ?? '6281312211161'}
+                          onChange={(e) => setConfigForm({ ...configForm, whatsapp_number: e.target.value })}
+                          className="w-full px-3.5 py-2.5 rounded-xl border-2 border-black bg-neutral-50 text-xs font-bold focus:bg-white focus:outline-none"
+                        />
+                        <span className="text-[10px] text-neutral-500 font-semibold mt-1 block">
+                          Format otomatis diubah menjadi format internasional (628xxx). Semua tombol WhatsApp di website (Header, Hero, Katalog, Footer, Studio 3D & Floating Button) akan langsung tersinkron.
+                        </span>
+                      </div>
+                    </div>
+
                     {/* Submit Button */}
                     <div className="pt-2">
                       <button
@@ -5446,6 +5048,37 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Simulated WhatsApp Live Sync Preview */}
+                  <div className="p-5 bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_#000] space-y-3">
+                    <div className="text-[10px] font-black uppercase text-neutral-400">Mockup Live Sinkronisasi WhatsApp:</div>
+                    <div className="p-4 bg-neutral-50 border-2 border-black rounded-xl space-y-3">
+                      <div className="flex items-center justify-between text-xs font-bold">
+                        <span className="text-neutral-600">Nomor Tampilan Web:</span>
+                        <span className="font-black text-black bg-[#facc15] px-2 py-0.5 rounded border border-black text-[11px]">
+                          {formatDisplayWhatsApp(configForm.whatsapp_number || '6281312211161')}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between text-xs font-bold">
+                        <span className="text-neutral-600">Link Tujuan WhatsApp:</span>
+                        <span className="font-black text-blue-600 text-[11px] truncate max-w-[180px]">
+                          wa.me/{cleanWhatsAppNumber(configForm.whatsapp_number || '6281312211161')}
+                        </span>
+                      </div>
+                      <div className="pt-1">
+                        <a
+                          href={`https://wa.me/${cleanWhatsAppNumber(configForm.whatsapp_number || '6281312211161')}?text=${encodeURIComponent('Halo BDGMERCH, tes link WhatsApp admin.')}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2 bg-green-500 text-white font-black text-[10px] uppercase rounded-lg border border-black flex items-center justify-center gap-1.5 hover:bg-green-600 transition-colors cursor-pointer"
+                        >
+                          <MessageSquare className="w-3.5 h-3.5" />
+                          <span>Tes Buka WhatsApp CS</span>
+                          <ArrowUpRight className="w-3 h-3 stroke-[3]" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Settings Information Helper */}
                   <div className="p-4 bg-yellow-50/70 border-2 border-black rounded-xl space-y-2 text-xs">
                     <div className="font-black text-black flex items-center gap-1.5">
@@ -5525,16 +5158,102 @@ export default function App() {
                   </form>
                 </div>
                 {/* RIGHT: INFO */}
+                {/* RIGHT: LIVE SEO & SOCIAL PREVIEW */}
                 <div className="lg:col-span-4 p-6 overflow-y-auto space-y-4 bg-[#fafafa]">
+                  {/* Google SERP Preview */}
                   <div className="p-4 bg-white border-2 border-black rounded-xl space-y-2 text-xs shadow-[4px_4px_0px_#000]">
-                    <div className="font-black text-black flex items-center gap-1.5 border-b-2 border-black pb-2 mb-2">
-                      <Search className="w-4 h-4 text-black" />
-                      <span>Google Search Preview</span>
+                    <div className="font-black text-black flex items-center justify-between border-b-2 border-black pb-2 mb-2">
+                      <div className="flex items-center gap-1.5">
+                        <Search className="w-4 h-4 text-black" />
+                        <span>Google SERP Preview</span>
+                      </div>
+                      <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded border border-emerald-300">Rich Snippets</span>
                     </div>
                     <div>
-                      <div className="text-[#1a0dab] text-sm font-normal truncate">{configForm.meta_title || 'BDGMERCH - Vendor Gelang Karet & Custom Sablon Kaos Bandung'}</div>
-                      <div className="text-[#006621] text-[10px] mb-1 truncate">{typeof window !== 'undefined' ? window.location.origin : 'https://bdgmerch.id'}</div>
-                      <div className="text-[#545454] text-[11px] leading-snug line-clamp-2">{configForm.meta_description || 'Vendor pembuatan gelang karet silikon custom, sablon kaos, hoodie, dan enamel pin terpercaya di Bandung. Berpengalaman dengan 40+ ulasan positif.'}</div>
+                      <div className="flex items-center gap-1.5 text-[10px] text-neutral-600 mb-0.5">
+                        <span className="font-bold text-black">bdgmerch.com</span>
+                        <span>›</span>
+                        <span>bandung-merchandise</span>
+                      </div>
+                      <div className="text-[#1a0dab] text-sm font-semibold hover:underline cursor-pointer truncate">
+                        {configForm.meta_title || 'BDGMERCH - Vendor Konveksi & Pabrik Custom Merchandise Bandung'}
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px] text-neutral-700 my-1 font-bold">
+                        <span className="text-amber-500">★★★★★</span>
+                        <span>Rating: 4.8</span>
+                        <span>•</span>
+                        <span>48 ulasan</span>
+                        <span>•</span>
+                        <span className="text-emerald-700 font-black">Tersedia</span>
+                      </div>
+                      <div className="text-[#4d5156] text-[11px] leading-snug line-clamp-3">
+                        {configForm.meta_description || 'Pabrik & Vendor merchandise B2B resmi terpercaya di Bandung. Spesialis Gelang Karet (Wristband), Sablon Kaos Combed, Hoodie, Pin Enamel, Totebag & Souvenir Kit.'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* WhatsApp / Telegram Link Preview Card */}
+                  <div className="p-4 bg-white border-2 border-black rounded-xl space-y-2 text-xs shadow-[4px_4px_0px_#000]">
+                    <div className="font-black text-black flex items-center gap-1.5 border-b-2 border-black pb-2 mb-2">
+                      <Share2 className="w-4 h-4 text-black" />
+                      <span>WhatsApp & OpenGraph Preview</span>
+                    </div>
+                    <div className="border border-neutral-300 rounded-lg overflow-hidden bg-neutral-50">
+                      <div className="h-28 bg-neutral-200 relative overflow-hidden">
+                        <img 
+                          src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&auto=format&fit=crop&q=80" 
+                          alt="OpenGraph Preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <span className="absolute bottom-1 right-1 bg-black/80 text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
+                          bdgmerch.com
+                        </span>
+                      </div>
+                      <div className="p-2.5 space-y-1">
+                        <p className="font-bold text-xs text-black line-clamp-1 leading-tight">
+                          {configForm.meta_title || 'BDGMERCH - Vendor Konveksi Bandung'}
+                        </p>
+                        <p className="text-[10px] text-neutral-600 line-clamp-2 leading-tight">
+                          {configForm.meta_description || 'Vendor merchandise B2B resmi terpercaya di Bandung. Sablon Kaos, Gelang Karet, Pin, dan Jaket.'}
+                        </p>
+                        <span className="text-[9px] text-neutral-400 font-mono block">https://bdgmerch.com</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* High Intent Keywords Recommendation */}
+                  <div className="p-4 bg-yellow-50/70 border-2 border-black rounded-xl space-y-2 text-xs">
+                    <div className="font-black text-black flex items-center gap-1.5">
+                      <span>🎯</span>
+                      <span>Rekomendasi Keyword Transaksional Tinggi</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {[
+                        'Vendor Konveksi Bandung',
+                        'Pabrik Merchandise Custom',
+                        'Vendor Gelang Karet Bandung',
+                        'Sablon Kaos Bandung',
+                        'Wristband Karet Custom',
+                        'Pouch & Totebag Promosi',
+                        'Pin Enamel Bandung',
+                        'Lanyard Custom Bandung'
+                      ].map((kw, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            const current = configForm.meta_keywords || '';
+                            if (!current.includes(kw)) {
+                              const updated = current ? `${current}, ${kw}` : kw;
+                              setConfigForm({ ...configForm, meta_keywords: updated });
+                            }
+                          }}
+                          className="text-[10px] font-bold bg-white hover:bg-[#facc15] text-black px-2 py-0.5 rounded-md border border-black shadow-[1px_1px_0px_#000] cursor-pointer transition-all active:scale-95"
+                          title="Klik untuk menambahkan keyword"
+                        >
+                          + {kw}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -5588,7 +5307,7 @@ export default function App() {
                 MINTA PENAWARAN HARGA
               </h2>
               <p className="text-xs text-neutral-600 font-medium mt-1">
-                Isi form berikut. Setelah menekan tombol kirim, teks akan otomatis terformat dan membuka WhatsApp kami di <strong className="text-black">0813-1221-1161</strong>.
+                Isi form berikut. Setelah menekan tombol kirim, teks akan otomatis terformat dan membuka WhatsApp kami di <strong className="text-black">{displayWhatsAppNumber}</strong>.
               </p>
             </div>
 
@@ -5700,7 +5419,7 @@ export default function App() {
                 className="w-full py-4 rounded-full bg-[#facc15] text-black font-black text-xs uppercase border-2 border-black shadow-[4px_4px_0px_#000] hover:translate-y-0.5 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>KIRIM PERMINTAAN PENAWARAN (KE WA 0813-1221-1161)</span>
+                <span>KIRIM PERMINTAAN PENAWARAN (KE WA {displayWhatsAppNumber})</span>
               </button>
 
             </form>
@@ -5724,8 +5443,9 @@ export default function App() {
         title="Chat Langsung via WhatsApp"
       >
         <MessageSquare className="w-5 h-5 fill-black text-black" />
-        <span className="hidden sm:inline uppercase">CHAT 0813-1221-1161</span>
+        <span className="hidden sm:inline uppercase">CHAT {displayWhatsAppNumber}</span>
       </a>
-      </div>
+
+    </div>
   );
 }

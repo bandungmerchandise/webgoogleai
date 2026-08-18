@@ -14,6 +14,7 @@ export interface SiteConfig {
   announcement_link_url?: string;
   instagram_handle?: string;
   instagram_url?: string;
+  whatsapp_number?: string;
 }
 
 export interface ProductItem {
@@ -38,7 +39,7 @@ export interface CategoryConfig {
   shortTitle: string;
   tag: string;
   description: string;
-  iconName: 'Shirt' | 'Layers' | 'Award' | 'ShoppingBag' | 'CircleDot' | 'Package';
+  iconName: 'Shirt' | 'Layers' | 'Award' | 'ShoppingBag' | 'CircleDot' | 'Package' | 'Box' | 'Tag';
   specs: string[];
   sampleMoq: string;
   popularItems: string;
