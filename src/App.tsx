@@ -71,7 +71,7 @@ import {
   PortfolioItem
 } from './types';
 
-const WA_PHONE_NUMBER = "628131221161"; // 08131221161 in international format
+const WA_PHONE_NUMBER = "628131221161"; // 081312211161 in international format
 
 const DEFAULT_SITE_CONFIG: SiteConfig = {
   brand_name: 'BDGMERCH',
@@ -1916,7 +1916,7 @@ export default function App() {
 - Qty: ${qty} Pcs
 - Catatan: ${catatan}`;
 
-    // Target link to 08131221161 (international: 628131221161)
+    // Target link to 081312211161 (international: 628131221161)
     const waUrl = `https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
 
     // Confetti effect
@@ -2482,7 +2482,7 @@ export default function App() {
                   {/* CTA PRIMARY: KONSULTASI DESAIN (WA) & LIHAT KATALOG */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 z-30 w-full sm:w-auto mb-8">
                     
-                    {/* BUTTON 1: KONSULTASI DESAIN (WA to 08131221161) */}
+                    {/* BUTTON 1: KONSULTASI DESAIN (WA to 081312211161) */}
                     <a
                       href={getDirectWhatsAppUrl("Halo BDGMERCH, saya ingin konsultasi desain dan estimasi harga merchandise untuk keperluan kami.")}
                       target="_blank"
@@ -3168,7 +3168,7 @@ export default function App() {
                     className="w-full py-4 rounded-full bg-[#facc15] text-black font-black text-xs uppercase border-2 border-black shadow-[4px_4px_0px_#000] hover:translate-y-0.5 hover:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>MINTA PENAWARAN VIA WA (08131221161)</span>
+                    <span>MINTA PENAWARAN VIA WA (081312211161)</span>
                   </button>
 
                 </div>
@@ -3501,7 +3501,7 @@ export default function App() {
                     className="w-full py-4 rounded-full bg-[#facc15] text-black font-black text-xs uppercase border-2 border-black shadow-[4px_4px_0px_#000] hover:translate-y-0.5 hover:shadow-none transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>MINTA PENAWARAN VIA WA (08131221161)</span>
+                    <span>MINTA PENAWARAN VIA WA (081312211161)</span>
                   </button>
 
                 </div>
