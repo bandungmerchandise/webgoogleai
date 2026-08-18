@@ -71,7 +71,7 @@ import {
   PortfolioItem
 } from './types';
 
-const WA_PHONE_NUMBER = "628131221161"; // 081312211161 in international format
+const WA_PHONE_NUMBER = "6281312211161"; // 081312211161 in international format
 
 const DEFAULT_SITE_CONFIG: SiteConfig = {
   brand_name: 'BDGMERCH',
@@ -1916,7 +1916,9 @@ export default function App() {
 - Qty: ${qty} Pcs
 - Catatan: ${catatan}`;
 
-    // Target link to 081312211161 (international: 628131221161)
+
+    
+    // Target link to 081312211161 (international: 6281312211161)
     const waUrl = `https://wa.me/${WA_PHONE_NUMBER}?text=${encodeURIComponent(message)}`;
 
     // Confetti effect
@@ -4073,7 +4075,7 @@ export default function App() {
                 className="bg-[#facc15] text-black font-black px-8 py-3.5 rounded-full border-2 border-black shadow-[3px_3px_0px_#fff] hover:translate-y-0.5 transition-all text-xs uppercase inline-flex items-center gap-2"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>CHAT WHATSAPP KE 0813-1221-161</span>
+                <span>CHAT WHATSAPP KE 0813-1221-1161</span>
               </a>
             </div>
 
@@ -4113,7 +4115,7 @@ export default function App() {
                     rel="noopener noreferrer"
                     className="text-[#facc15] hover:underline font-black bg-[#facc15]/10 px-2 py-0.5 rounded border border-[#facc15]/30 inline-block"
                   >
-                    0813-1221-161
+                    0813-1221-1161
                   </a>
                 </p>
                 <p>
@@ -5585,7 +5587,7 @@ export default function App() {
                 MINTA PENAWARAN HARGA
               </h2>
               <p className="text-xs text-neutral-600 font-medium mt-1">
-                Isi form berikut. Setelah menekan tombol kirim, teks akan otomatis terformat dan membuka WhatsApp kami di <strong className="text-black">0813-1221-161</strong>.
+                Isi form berikut. Setelah menekan tombol kirim, teks akan otomatis terformat dan membuka WhatsApp kami di <strong className="text-black">0813-1221-1161</strong>.
               </p>
             </div>
 
@@ -5697,7 +5699,7 @@ export default function App() {
                 className="w-full py-4 rounded-full bg-[#facc15] text-black font-black text-xs uppercase border-2 border-black shadow-[4px_4px_0px_#000] hover:translate-y-0.5 hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
               >
                 <MessageSquare className="w-4 h-4" />
-                <span>KIRIM PERMINTAAN PENAWARAN (KE WA 0813-1221-161)</span>
+                <span>KIRIM PERMINTAAN PENAWARAN (KE WA 0813-1221-1161)</span>
               </button>
 
             </form>
@@ -5721,7 +5723,7 @@ export default function App() {
         title="Chat Langsung via WhatsApp"
       >
         <MessageSquare className="w-5 h-5 fill-black text-black" />
-        <span className="hidden sm:inline uppercase">CHAT 0813-1221-161</span>
+        <span className="hidden sm:inline uppercase">CHAT 0813-1221-1161</span>
       </a>
 
     </div>
