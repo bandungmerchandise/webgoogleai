@@ -63,6 +63,7 @@ import { WristbandCanvas } from './components/WristbandCanvas';
 import { CategoryCardSlider } from './components/CategoryCardSlider';
 import { InstagramPortfolio } from './components/InstagramPortfolio';
 import { PromoBar } from './components/PromoBar';
+import { HeroFloatingCards, DEFAULT_FLOATING_CARDS, FloatingCardItem } from './components/HeroFloatingCards';
 import { useWhatsApp, cleanWhatsAppNumber, formatDisplayWhatsApp } from './context/WhatsAppContext';
 import {
   PageId,
@@ -1961,79 +1962,15 @@ export default function App() {
             <section className="relative pt-16 pb-20 sm:pt-20 sm:pb-28 lg:pt-28 lg:pb-36 overflow-hidden min-h-[calc(100vh-140px)] flex flex-col justify-center">
               <div className="max-w-7xl mx-auto px-4 sm:px-8 relative w-full">
 
-                {/* POLAROID FLOATING CARDS (Positioned Outward with Safe Z-Index) */}
-                {/* Card 1: Top Left - Kaos Cotton Combed (-4deg) */}
-                <div className="hidden lg:block absolute top-4 left-0 xl:left-4 2xl:left-8 w-44 xl:w-52 bg-white border-2 border-black p-2.5 rounded-2xl shadow-[4px_4px_0px_#000] rotate-[-4deg] z-10 hover:rotate-0 hover:scale-105 transition-all cursor-pointer animate-float-1">
-                  <div className="aspect-[4/5] bg-neutral-900 rounded-xl mb-2.5 overflow-hidden border-2 border-black relative p-3 flex flex-col justify-between text-white">
-                    <div className="flex items-center justify-between text-[10px] font-black">
-                      <span className="bg-[#facc15] text-black px-2 py-0.5 rounded">COTTON 30s</span>
-                      <span>MOQ 24</span>
-                    </div>
-                    <div className="text-center py-4">
-                      <Shirt className="w-14 xl:w-16 h-14 xl:h-16 mx-auto text-[#facc15] mb-2" />
-                      <div className="font-black text-xs xl:text-sm uppercase">Custom Apparel</div>
-                      <div className="text-[10px] text-neutral-300">Sablon Plastisol HD</div>
-                    </div>
-                    <div className="text-[9px] bg-black/60 backdrop-blur-sm p-1.5 rounded text-center font-bold text-neutral-300">
-                      Jahitan Rantai Standar Distro
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between px-1">
-                    <span className="text-[11px] font-black text-black uppercase">Apparel Bandung</span>
-                    <span className="text-[10px] font-black text-black bg-[#facc15] px-1 rounded">✓ 5-7 Hari</span>
-                  </div>
-                </div>
-
-                {/* Card 2: Top Right - Gelang Karet & Rubber Patch (+4deg) */}
-                <div className="hidden lg:block absolute top-6 right-0 xl:right-4 2xl:right-8 w-48 xl:w-56 bg-white border-2 border-black p-2.5 rounded-2xl shadow-[4px_4px_0px_#000] rotate-[4deg] z-10 hover:rotate-0 hover:scale-105 transition-all cursor-pointer animate-float-2">
-                  <div className="aspect-video bg-black rounded-xl mb-2.5 p-3.5 border-2 border-black flex flex-col justify-between text-white">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-black uppercase text-[#facc15] tracking-widest">PABRIKASI LANGSUNG</span>
-                      <span className="w-2 h-2 rounded-full bg-[#facc15] animate-ping"></span>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg xl:text-xl font-black text-white tracking-tight">RUBBER WRISTBAND</div>
-                      <div className="text-[10px] xl:text-[11px] text-[#facc15] font-black">Gelang Karet Timbul PVC</div>
-                    </div>
-                    <div className="flex items-center justify-between text-[9px] font-bold text-neutral-400">
-                      <span>MOQ: 100 Pcs</span>
-                      <span>Emboss / Deboss</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between px-1">
-                    <span className="text-[11px] font-black text-black">Spesialis Karet Bandung</span>
-                    <div className="w-5 h-5 bg-[#facc15] border border-black rounded-full flex items-center justify-center">
-                      <Check className="w-3 h-3 text-black stroke-[3]" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 3: Bottom Left - Pin Enamel (-3deg) */}
-                <div className="hidden xl:block absolute bottom-6 left-6 2xl:left-12 w-44 bg-white border-2 border-black p-2.5 rounded-2xl shadow-[4px_4px_0px_#000] rotate-[-3deg] z-10 hover:rotate-0 hover:scale-105 transition-all cursor-pointer animate-float-3">
-                  <div className="aspect-square bg-gradient-to-br from-neutral-900 to-black rounded-xl mb-2 border-2 border-black p-3 flex flex-col items-center justify-center text-center text-white">
-                    <Award className="w-10 h-10 text-[#facc15] mb-2" />
-                    <div className="text-xs font-black uppercase tracking-wider text-white">PIN ENAMEL LOGAM</div>
-                    <div className="text-[10px] text-neutral-400 font-bold">Hard & Soft Enamel Cor</div>
-                  </div>
-                  <div className="text-[10px] font-black text-center text-black uppercase tracking-wider">
-                    VIP & Event Badge
-                  </div>
-                </div>
-
-                {/* Card 4: Bottom Right - Gantungan Kunci Karet (+5deg) */}
-                <div className="hidden xl:block absolute bottom-6 right-6 2xl:right-12 w-44 bg-white border-2 border-black p-2.5 rounded-2xl shadow-[4px_4px_0px_#000] rotate-[5deg] z-10 hover:rotate-0 hover:scale-105 transition-all cursor-pointer animate-float-4">
-                  <div className="aspect-[4/3] bg-yellow-50 rounded-xl mb-2 p-3 border-2 border-black flex flex-col justify-between">
-                    <div className="flex items-center justify-between">
-                      <Tag className="w-5 h-5 text-black" />
-                      <span className="text-[9px] font-black bg-black text-[#facc15] px-1.5 py-0.5 rounded">CUSTOM DIE-CUT</span>
-                    </div>
-                    <div className="font-black text-xs text-black">KEYCHAIN KARET 3D</div>
-                    <div className="text-[9px] font-bold text-neutral-600">Ring Putar Anti Karat</div>
-                  </div>
-                  <div className="text-[10px] font-black text-neutral-600 uppercase tracking-widest text-center">
-                    Souvenir Komunitas
-                  </div>
-                </div>
+                {/* POLAROID FLOATING CARDS (MODULAR COMPONENT - 2 SISI KIRI & 2 SISI KANAN) */}
+                <HeroFloatingCards 
+                  cards={DEFAULT_FLOATING_CARDS} 
+                  onCardClick={(card) => {
+                    if (card.linkTarget) {
+                      navigateTo(card.linkTarget as PageId);
+                    }
+                  }} 
+                />
 
                 {/* HERO CENTER TEXT (High Z-Index, Top Layer, Centered) */}
                 <div className="max-w-4xl mx-auto text-center relative z-30 flex flex-col items-center">
@@ -2053,8 +1990,15 @@ export default function App() {
                     Vendor resmi terpercaya 10+ tahun di Bandung. Pengerjaan cepat untuk Komunitas, Event, dan Korporasi.
                   </p>
 
-                  {/* TRUST BADGE / GOOGLE MAPS SOCIAL PROOF (CENTERED BELOW DESCRIPTION & INDONESIAN AVATARS) */}
-                  <div className="bg-white border-2 border-black px-4 py-2 rounded-full shadow-[3px_3px_0px_#000] hover:translate-y-0.5 hover:shadow-none transition-all cursor-default relative z-30 inline-flex items-center justify-center gap-3 mb-8 mx-auto">
+                  {/* TRUST BADGE / GOOGLE MAPS SOCIAL PROOF (CLICKABLE ANCHOR TO GOOGLE MAPS CID WITH NEO-BRUTALISM STYLING) */}
+                  <a
+                    href="https://www.google.com/maps?cid=11647141355523453505"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    id="hero-google-maps-review-card"
+                    title="Buka Ulasan Google Maps BDGMERCH di Tab Baru"
+                    className="bg-white border-2 border-black px-4 py-2 rounded-full shadow-[3px_3px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer relative z-30 inline-flex items-center justify-center gap-3 mb-8 mx-auto group select-none"
+                  >
                     <div className="flex -space-x-2">
                       {[
                         { name: 'Rizki Pratama - Event Organizer', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&auto=format&fit=crop&q=80' },
@@ -2062,23 +2006,24 @@ export default function App() {
                         { name: 'Dimas Aditya - Komunitas Motor', img: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80' },
                         { name: 'Siti Rahmawati - Procurement Corp', img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&auto=format&fit=crop&q=80' }
                       ].map((person, idx) => (
-                        <div key={idx} className="w-7 h-7 rounded-full border-2 border-black bg-neutral-100 flex items-center justify-center overflow-hidden z-10 relative" title={person.name}>
+                        <div key={idx} className="w-7 h-7 rounded-full border-2 border-black bg-neutral-100 flex items-center justify-center overflow-hidden z-10 relative group-hover:scale-105 transition-transform" title={person.name}>
                           <img src={person.img} alt={person.name} className="w-full h-full object-cover" />
                         </div>
                       ))}
-                      <div className="w-7 h-7 rounded-full border-2 border-black bg-[#facc15] text-black text-[9px] font-black flex items-center justify-center z-20">
+                      <div className="w-7 h-7 rounded-full border-2 border-black bg-[#facc15] text-black text-[9px] font-black flex items-center justify-center z-20 group-hover:scale-105 transition-transform">
                         +42
                       </div>
                     </div>
-                    <div className="text-left pr-2">
-                      <div className="flex items-center gap-1 text-black font-black text-xs">
-                        ⭐ 4.8/5.0 Google Maps
+                    <div className="text-left pr-1">
+                      <div className="flex items-center gap-1.5 text-black font-black text-xs">
+                        <span>⭐ 4.8/5.0 Google Maps</span>
+                        <ExternalLink className="w-3 h-3 text-black stroke-[2.5] opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                       </div>
-                      <div className="text-[9px] font-black text-neutral-500 uppercase tracking-tight">
+                      <div className="text-[9px] font-black text-neutral-500 uppercase tracking-tight group-hover:text-black transition-colors">
                         42+ Ulasan Pelanggan Terverifikasi
                       </div>
                     </div>
-                  </div>
+                  </a>
 
                   {/* CTA PRIMARY: KONSULTASI DESAIN (WA) & LIHAT KATALOG */}
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-4 z-30 w-full sm:w-auto mb-8">
