@@ -5726,6 +5726,6 @@ export default function App() {
         <MessageSquare className="w-5 h-5 fill-black text-black" />
         <span className="hidden sm:inline uppercase">CHAT 0813-1221-1161</span>
       </a>
-</div>
+      </div>
   );
 }
