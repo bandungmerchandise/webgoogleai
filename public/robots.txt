@@ -1,6 +1,56 @@
+# ==============================================================================
+# BDGMERCH — PRODUCTION ROBOTS.TXT
+# Optimized for Googlebot, Bingbot, WhatsApp, and Social Media Crawlers
+# Website: https://bdgmerch.com
+# ==============================================================================
+
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /api/
+Allow: /assets/
+Allow: /images/
+Allow: /#katalog
+Allow: /#custom-studio
+Allow: /#kenapa-bdgmerch
+Allow: /#faq
 
+# Disallow admin panel queries and internal endpoints
+Disallow: /api/
+Disallow: /admin
+Disallow: /*?secret=*
+Disallow: /*?admin=*
+Disallow: /*?token=*
+
+# Major Crawlers Explicit Optimization
+User-agent: Googlebot
+Allow: /
+Allow: /*.js$
+Allow: /*.css$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.webp$
+Allow: /*.svg$
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /assets/
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Social Media Previews
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+# Canonical Sitemap
 Sitemap: https://bdgmerch.com/sitemap.xml

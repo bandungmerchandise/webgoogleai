@@ -1,9 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- 1. Homepage (Beranda) -->
   <url>
     <loc>https://bdgmerch.com/</loc>
     <lastmod>2026-08-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=1200&amp;auto=format&amp;fit=crop&amp;q=80</image:loc>
+      <image:title>BDGMERCH - Vendor Gelang Karet &amp; Konveksi Sablon Kaos Bandung</image:title>
+      <image:caption>Workshop dan pabrik merchandise custom B2B Bandung</image:caption>
+    </image:image>
   </url>
+
+  <!-- 2. Katalog Produk -->
+  <url>
+    <loc>https://bdgmerch.com/#katalog</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=1200&amp;auto=format&amp;fit=crop&amp;q=80</image:loc>
+      <image:title>Katalog Merchandise B2B BDGMERCH Bandung</image:title>
+      <image:caption>Katalog lengkap kaos combed, gelang karet, pin enamel, tas totebag, bucket hat</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 3. Live 3D Custom Studio (Wristband & Mockup Generator) -->
+  <url>
+    <loc>https://bdgmerch.com/#custom-studio</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1622445262464-84b1456045b6?w=1200&amp;auto=format&amp;fit=crop&amp;q=80</image:loc>
+      <image:title>Live 3D Wristband &amp; Mockup Studio BDGMERCH</image:title>
+      <image:caption>Generator desain gelang karet interaktif dan simulasi mockup produk</image:caption>
+    </image:image>
+  </url>
+
+  <!-- 4. Kenapa BDGMERCH (Profil Pabrik & Standar Kualitas) -->
+  <url>
+    <loc>https://bdgmerch.com/#kenapa-bdgmerch</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- 5. FAQ (Tanya Jawab Seputar Produksi & Minimum Order) -->
+  <url>
+    <loc>https://bdgmerch.com/#faq</loc>
+    <lastmod>2026-08-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
