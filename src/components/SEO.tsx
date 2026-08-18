@@ -22,7 +22,7 @@ export const SEO: React.FC<SEOProps> = ({
   ogImage = "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=1200&auto=format&fit=crop&q=80",
   canonicalUrl = typeof window !== 'undefined' ? window.location.origin : 'https://bdgmerch.id',
   brandName = "BDGMERCH",
-  telephone = "08131221161",
+  telephone = "081312211161",
   ratingValue = "4.8",
   reviewCount = "42",
   city = "Bandung",
