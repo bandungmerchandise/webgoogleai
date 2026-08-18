@@ -1,12 +1,4 @@
 import { PromoBar } from './components/PromoBar';
-
-// Di dalam return JSX utama App:
-<PromoBar 
-  siteConfig={siteConfig}
-  onClaimPromo={(pText) => openPenawaranModal(`Klaim Promo: ${pText || 'Free Sampel Bahan'}`, '100')}
-/>
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { supabase } from './lib/supabase';
@@ -221,6 +213,29 @@ export const BDGMERCH_CATEGORIES: CategoryConfig[] = [
     ]
   }
 ];
+
+export default function App() {
+  // ... (state dan handler kamu yang sudah ada)
+
+  return (
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+      {/* 2. Pasang PromoBar paling atas */}
+      <PromoBar
+        siteConfig={siteConfig}
+        onClaimPromo={(pText) =>
+          openPenawaranModal(`Klaim Promo: ${pText || 'Free Sampel Bahan'}`, '100')
+        }
+      />
+
+      {/* Header / Navbar utama kamu */}
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-sm">
+        {/* Navbar content */}
+      </header>
+
+      {/* Rest of your components/pages */}
+    </div>
+  );
+}
 
 // DEFAULT PORTFOLIO ITEMS (PREPARATION FOR N8N & SUPABASE DYNAMIC SYNC)
 export const DEFAULT_PORTFOLIO: PortfolioItem[] = [
