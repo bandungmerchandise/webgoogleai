@@ -1,1 +1,0 @@
-import PromoBar from './PromoBar';
