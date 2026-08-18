@@ -1,3 +1,12 @@
+import { PromoBar } from './components/PromoBar';
+
+// Di dalam return JSX utama App:
+<PromoBar 
+  siteConfig={siteConfig}
+  onClaimPromo={(pText) => openPenawaranModal(`Klaim Promo: ${pText || 'Free Sampel Bahan'}`, '100')}
+/>
+
+
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { supabase } from './lib/supabase';
