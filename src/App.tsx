@@ -1,4 +1,3 @@
-import { PromoBar } from './components/PromoBar';
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import { supabase } from './lib/supabase';
