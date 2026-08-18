@@ -83,7 +83,7 @@ const DEFAULT_SITE_CONFIG: SiteConfig = {
   meta_keywords: 'Vendor Konveksi Bandung, Pabrik Merchandise Custom, Vendor Gelang Karet Bandung, Sablon Kaos Bandung, Konveksi Kaos Bandung, Wristband Karet Custom, Pouch & Totebag Promosi, Pin Enamel Bandung, Lanyard Custom Bandung, Cetak Merchandise B2B, Seminar Kit Bandung, Vendor Merchandise Event',
   announcement_enabled: true,
   announcement_badge: 'PROMO PRODUKSI BULAN INI',
-  announcement_text: 'Gratis Ongkir / Subsidi pengiriman ke Seluruh Indonesia!',
+  announcement_text: 'Free Sampel Bahan & Mockup 3D untuk Order di atas 100 Pcs!',
   announcement_link_text: 'Klaim Promo',
   announcement_link_url: '',
   instagram_handle: '@bdgmerch.id',
@@ -526,6 +526,7 @@ export default function App() {
   // REUSABLE FETCH SITE CONFIGURATION / SETTINGS FROM SUPABASE
   const fetchSupabaseSiteConfig = async () => {
     try {
+      // 1. Try 'site_settings' single row table
       const { data, error } = await supabase
         .from('site_settings')
         .select('*')
@@ -568,34 +569,41 @@ export default function App() {
         }
       }
 
-      // Check fallback 'settings' table if announcement_text or promo_text was not present
-      if (!promoText) {
-        const { data: settingsRows } = await supabase
-          .from('settings')
-          .select('*')
-          .in('key', ['promo_text', 'announcement_text', 'promo_badge', 'announcement_badge']);
+      // 2. Fetch all key-value pairs from 'settings' table (acts as robust primary/fallback)
+      const { data: settingsRows, error: settingsErr } = await supabase
+        .from('settings')
+        .select('*');
 
-        if (settingsRows && settingsRows.length > 0) {
-          let updated = false;
-          const configCopy = { ...siteConfig };
+      if (!settingsErr && settingsRows && settingsRows.length > 0) {
+        setSiteConfig((prevConfig) => {
+          const updated = { ...prevConfig };
           settingsRows.forEach((row: any) => {
-            if ((row.key === 'promo_text' || row.key === 'announcement_text') && row.value) {
-              configCopy.announcement_text = row.value;
-              updated = true;
-            }
-            if ((row.key === 'promo_badge' || row.key === 'announcement_badge') && row.value) {
-              configCopy.announcement_badge = row.value;
-              updated = true;
-            }
+            if (!row.key || row.value === undefined || row.value === null) return;
+            const val = String(row.value).trim();
+            if (!val && row.key !== 'announcement_link_url') return;
+
+            if (row.key === 'brand_name') updated.brand_name = val;
+            if (row.key === 'tagline') updated.tagline = val;
+            if (row.key === 'logo_url') updated.logo_url = val;
+            if (row.key === 'meta_title') updated.meta_title = val;
+            if (row.key === 'meta_description') updated.meta_description = val;
+            if (row.key === 'meta_keywords') updated.meta_keywords = val;
+            if (row.key === 'announcement_text' || row.key === 'promo_text') updated.announcement_text = val;
+            if (row.key === 'announcement_badge' || row.key === 'promo_badge') updated.announcement_badge = val;
+            if (row.key === 'announcement_link_text' || row.key === 'promo_link_text') updated.announcement_link_text = val;
+            if (row.key === 'announcement_link_url') updated.announcement_link_url = val;
+            if (row.key === 'announcement_enabled') updated.announcement_enabled = val === 'true' || val === '1';
+            if (row.key === 'instagram_handle') updated.instagram_handle = val;
+            if (row.key === 'instagram_url') updated.instagram_url = val;
+            if (row.key === 'whatsapp_number') updated.whatsapp_number = val;
           });
-          if (updated) {
-            setSiteConfig(configCopy);
-            setConfigForm(configCopy);
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('bdgmerch_site_config_v1', JSON.stringify(configCopy));
-            }
+
+          setConfigForm(updated);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('bdgmerch_site_config_v1', JSON.stringify(updated));
           }
-        }
+          return updated;
+        });
       }
     } catch (err: any) {
       console.warn('Supabase site_settings fetch note:', err?.message || err);
@@ -1411,11 +1419,22 @@ export default function App() {
 
       // Also upsert key-value pairs into settings table as fail-safe
       await supabase.from('settings').upsert([
+        { key: 'brand_name', value: payload.brand_name, updated_at: new Date().toISOString() },
+        { key: 'tagline', value: payload.tagline, updated_at: new Date().toISOString() },
+        { key: 'logo_url', value: payload.logo_url, updated_at: new Date().toISOString() },
+        { key: 'meta_title', value: payload.meta_title || '', updated_at: new Date().toISOString() },
+        { key: 'meta_description', value: payload.meta_description || '', updated_at: new Date().toISOString() },
+        { key: 'meta_keywords', value: payload.meta_keywords || '', updated_at: new Date().toISOString() },
         { key: 'promo_text', value: payload.announcement_text, updated_at: new Date().toISOString() },
         { key: 'announcement_text', value: payload.announcement_text, updated_at: new Date().toISOString() },
         { key: 'promo_badge', value: payload.announcement_badge, updated_at: new Date().toISOString() },
         { key: 'announcement_badge', value: payload.announcement_badge, updated_at: new Date().toISOString() },
-        { key: 'announcement_enabled', value: String(payload.announcement_enabled), updated_at: new Date().toISOString() }
+        { key: 'announcement_link_text', value: payload.announcement_link_text || '', updated_at: new Date().toISOString() },
+        { key: 'announcement_link_url', value: payload.announcement_link_url || '', updated_at: new Date().toISOString() },
+        { key: 'announcement_enabled', value: String(payload.announcement_enabled), updated_at: new Date().toISOString() },
+        { key: 'instagram_handle', value: payload.instagram_handle, updated_at: new Date().toISOString() },
+        { key: 'instagram_url', value: payload.instagram_url, updated_at: new Date().toISOString() },
+        { key: 'whatsapp_number', value: payload.whatsapp_number, updated_at: new Date().toISOString() }
       ]);
     } catch (err: any) {
       console.warn('Save site_settings note:', err);
@@ -1726,6 +1745,8 @@ export default function App() {
         brandName={siteConfig.brand_name}
         logoUrl={siteConfig.logo_url}
         telephone={`+${whatsappNumber}`}
+        instagramUrl={siteConfig.instagram_url}
+        instagramHandle={siteConfig.instagram_handle}
         products={products}
         faqs={faqs}
         currentRoute={currentPage}
@@ -3694,6 +3715,17 @@ export default function App() {
                     className="text-[#facc15] hover:underline font-black bg-[#facc15]/10 px-2 py-0.5 rounded border border-[#facc15]/30 inline-block"
                   >
                     {displayWhatsAppNumber}
+                  </a>
+                </p>
+                <p>
+                  <span className="text-neutral-300 font-black">📸 Instagram:</span>{' '}
+                  <a 
+                    href={siteConfig.instagram_url || 'https://www.instagram.com/bdgmerch.id'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[#facc15] hover:underline font-black bg-[#facc15]/10 px-2 py-0.5 rounded border border-[#facc15]/30 inline-block"
+                  >
+                    {siteConfig.instagram_handle || '@bdgmerch.id'}
                   </a>
                 </p>
                 <p>

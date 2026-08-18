@@ -12,6 +12,8 @@ export interface SEOProps {
   logoUrl?: string;
   telephone?: string;
   email?: string;
+  instagramUrl?: string;
+  instagramHandle?: string;
   ratingValue?: string;
   reviewCount?: string;
   city?: string;
@@ -36,6 +38,8 @@ export const SEO: React.FC<SEOProps> = ({
   logoUrl = "https://bdgmerch.com/logo.png",
   telephone = "+6281312211161",
   email = "halo@bdgmerch.com",
+  instagramUrl = "https://www.instagram.com/bdgmerch",
+  instagramHandle = "@bdgmerch",
   ratingValue = "4.8",
   reviewCount = "48",
   city = "Bandung",
@@ -78,7 +82,7 @@ export const SEO: React.FC<SEOProps> = ({
       }
     ],
     "sameAs": [
-      "https://www.instagram.com/bdgmerch.id",
+      instagramUrl,
       "https://www.tiktok.com/@bdgmerch",
       `https://wa.me/${cleanWaDigits}`
     ]
@@ -138,7 +142,7 @@ export const SEO: React.FC<SEOProps> = ({
       "reviewCount": reviewCount
     },
     "sameAs": [
-      "https://www.instagram.com/bdgmerch.id",
+      instagramUrl,
       "https://www.tiktok.com/@bdgmerch",
       `https://wa.me/${cleanWaDigits}`
     ],
@@ -330,8 +334,8 @@ export const SEO: React.FC<SEOProps> = ({
 
       {/* Twitter Cards */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@bdgmerch" />
-      <meta name="twitter:creator" content="@bdgmerch" />
+      <meta name="twitter:site" content={instagramHandle} />
+      <meta name="twitter:creator" content={instagramHandle} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
