@@ -63,6 +63,7 @@ import { WristbandCanvas } from './components/WristbandCanvas';
 import { CategoryCardSlider } from './components/CategoryCardSlider';
 import { InstagramPortfolio } from './components/InstagramPortfolio';
 import { PromoBar } from './components/PromoBar';
+import { Header } from './components/Header';
 import { HeroFloatingCards, DEFAULT_FLOATING_CARDS, FloatingCardItem } from './components/HeroFloatingCards';
 import { useWhatsApp, cleanWhatsAppNumber, formatDisplayWhatsApp } from './context/WhatsAppContext';
 import {
@@ -1766,186 +1767,14 @@ export default function App() {
       />
 
       {/* NAVBAR */}
-      <header className="sticky top-0 z-40 bg-[#f8f8f8]/95 backdrop-blur-md border-b-2 border-black transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
-          
-          {/* Brand Logo with optional custom image + dynamic text & tagline */}
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={() => navigateTo('home')}
-              className="flex items-center gap-3 group cursor-pointer text-left"
-            >
-              {siteConfig.logo_url ? (
-                <img 
-                  src={siteConfig.logo_url} 
-                  alt={siteConfig.brand_name} 
-                  className="h-10 max-h-10 w-auto object-contain drop-shadow-sm transition-transform group-hover:scale-105"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
-                />
-              ) : (
-                <img 
-                  src="logo.png" 
-                  alt={siteConfig.brand_name} 
-                  className="h-10 max-h-10 w-auto object-contain"
-                  onError={(e) => {
-                    (e.target as HTMLElement).style.display = 'none';
-                  }}
-                />
-              )}
-
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-black leading-none flex items-center gap-1.5">
-                  {siteConfig.brand_name || 'BDGMERCH'}
-                  <span className="w-2.5 h-2.5 bg-[#facc15] border border-black rounded-full inline-block shrink-0"></span>
-                </span>
-                <span className="text-[9px] font-black text-neutral-600 uppercase tracking-widest mt-0.5">
-                  {siteConfig.tagline || 'BANDUNG MERCHANDISE VENDOR'}
-                </span>
-              </div>
-            </button>
-          </div>
-
-          {/* Desktop Multi-Page Navigation with Yellow Neon Highlights */}
-          <nav className="hidden md:flex items-center gap-1 font-black text-xs uppercase tracking-wider">
-            
-            <button 
-              onClick={() => navigateTo('home')} 
-              className={`px-4 py-2 rounded-full border-2 transition-all cursor-pointer ${
-                currentPage === 'home'
-                  ? 'bg-black text-[#facc15] border-black shadow-[2px_2px_0px_#000]'
-                  : 'bg-transparent border-transparent text-neutral-700 hover:bg-neutral-200/70 hover:text-black'
-              }`}
-            >
-              Beranda
-            </button>
-
-            <button 
-              onClick={() => navigateTo('katalog')} 
-              className={`px-4 py-2 rounded-full border-2 transition-all cursor-pointer ${
-                currentPage === 'katalog'
-                  ? 'bg-[#facc15] text-black border-black shadow-[2px_2px_0px_#000]'
-                  : 'bg-transparent border-transparent text-neutral-700 hover:bg-neutral-200/70 hover:text-black'
-              }`}
-            >
-              Katalog Produk
-            </button>
-
-            <button 
-              onClick={() => navigateTo('custom-studio')} 
-              className={`px-4 py-2 rounded-full border-2 transition-all cursor-pointer flex items-center gap-1.5 ${
-                currentPage === 'custom-studio'
-                  ? 'bg-[#facc15] text-black border-black shadow-[2px_2px_0px_#000]'
-                  : 'bg-transparent border-transparent text-neutral-700 hover:bg-neutral-200/70 hover:text-black'
-              }`}
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Custom Studio</span>
-            </button>
-
-            <button 
-              onClick={() => navigateTo('kenapa-bdgmerch')} 
-              className={`px-4 py-2 rounded-full border-2 transition-all cursor-pointer ${
-                currentPage === 'kenapa-bdgmerch'
-                  ? 'bg-[#facc15] text-black border-black shadow-[2px_2px_0px_#000]'
-                  : 'bg-transparent border-transparent text-neutral-700 hover:bg-neutral-200/70 hover:text-black'
-              }`}
-            >
-              Kenapa BDGMERCH
-            </button>
-
-            <button 
-              onClick={() => navigateTo('faq')} 
-              className={`px-4 py-2 rounded-full border-2 transition-all cursor-pointer ${
-                currentPage === 'faq'
-                  ? 'bg-[#facc15] text-black border-black shadow-[2px_2px_0px_#000]'
-                  : 'bg-transparent border-transparent text-neutral-700 hover:bg-neutral-200/70 hover:text-black'
-              }`}
-            >
-              FAQ
-            </button>
-          </nav>
-
-          {/* Action CTA: MINTA PENAWARAN (Kuning Neon - No Cart Counter) */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => openPenawaranModal()}
-              className="bg-[#facc15] text-black px-5 sm:px-6 py-2.5 rounded-full text-xs font-black flex items-center gap-2 group border-2 border-black shadow-[3px_3px_0px_#000] hover:translate-y-0.5 hover:shadow-[1px_1px_0px_#000] transition-all cursor-pointer"
-            >
-              <span>MINTA PENAWARAN</span>
-              <span className="w-5 h-5 bg-black text-white rounded-full flex items-center justify-center transition-transform group-hover:translate-x-0.5">
-                <svg className="w-3 h-3 text-[#facc15]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5l7 7-7 7" />
-                </svg>
-              </span>
-            </button>
-
-            {/* Mobile Hamburger Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl border-2 border-black bg-white cursor-pointer"
-              aria-label="Buka Menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-b-2 border-black px-6 py-5 space-y-2 font-black shadow-xl animate-fadeIn">
-            <button 
-              onClick={() => navigateTo('home')} 
-              className={`block w-full text-left py-2.5 px-3 rounded-lg border-2 ${
-                currentPage === 'home' ? 'bg-black text-white border-black' : 'bg-transparent border-transparent text-black'
-              }`}
-            >
-              Beranda
-            </button>
-            <button 
-              onClick={() => navigateTo('katalog')} 
-              className={`block w-full text-left py-2.5 px-3 rounded-lg border-2 ${
-                currentPage === 'katalog' ? 'bg-[#facc15] text-black border-black' : 'bg-transparent border-transparent text-black'
-              }`}
-            >
-              Katalog Produk
-            </button>
-            <button 
-              onClick={() => navigateTo('custom-studio')} 
-              className={`block w-full text-left py-2.5 px-3 rounded-lg border-2 ${
-                currentPage === 'custom-studio' ? 'bg-[#facc15] text-black border-black' : 'bg-transparent border-transparent text-black'
-              }`}
-            >
-              Custom Studio (Live Mockup 3 Objek)
-            </button>
-            <button 
-              onClick={() => navigateTo('kenapa-bdgmerch')} 
-              className={`block w-full text-left py-2.5 px-3 rounded-lg border-2 ${
-                currentPage === 'kenapa-bdgmerch' ? 'bg-[#facc15] text-black border-black' : 'bg-transparent border-transparent text-black'
-              }`}
-            >
-              Kenapa BDGMERCH
-            </button>
-            <button 
-              onClick={() => navigateTo('faq')} 
-              className={`block w-full text-left py-2.5 px-3 rounded-lg border-2 ${
-                currentPage === 'faq' ? 'bg-[#facc15] text-black border-black' : 'bg-transparent border-transparent text-black'
-              }`}
-            >
-              FAQ (Tanya Jawab)
-            </button>
-            <div className="pt-2">
-              <button
-                onClick={() => { setMobileMenuOpen(false); openPenawaranModal(); }}
-                className="w-full bg-[#facc15] text-black py-3 rounded-xl border-2 border-black font-black text-center shadow-[3px_3px_0px_#000]"
-              >
-                MINTA PENAWARAN HARGA
-              </button>
-            </div>
-          </div>
-        )}
-      </header>
+      <Header
+        siteConfig={siteConfig}
+        currentPage={currentPage}
+        navigateTo={navigateTo}
+        openPenawaranModal={openPenawaranModal}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+      />
 
       {/* ========================================================================= */}
       {/* MAIN MULTI-PAGE RENDERER */}
